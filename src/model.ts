@@ -10,13 +10,24 @@ const getData = async (done: (db: any) => void) => {
 };
 
 export const getEmployees = () => {
-	getData(async (db) => {
-		const employees = await db
-			.collection('employees')
-			.find({})
-			.project({ firstName: 1, lastName: 1 })
-			.toArray();
-		console.log(employees);
+	return new Promise((resolve, reject) => {
+		try {
+			getData(async (db) => {
+				const employees = await db
+					.collection('employees')
+					.find({})
+					.project({ firstName: 1, lastName: 1, title: 1, notes: 1 })
+					.toArray();
+				if (employees.length === 0) {
+					reject('no data')
+				} else {
+					resolve(employees);
+				}
+			});
+		}
+		catch (e) {
+			reject(e.message)
+		}
 	})
 }
 
@@ -38,7 +49,7 @@ export const getApiInstructions = () => {
 </style>
 <h1>Book Site API</h1>
 <ul>
-<li><a href="employees">/employees</a> - get all employees</li>
+<li>GET <a href="employees">/employees</a> - get all employees</li>
 </ul>
 	`;
 }
