@@ -1,7 +1,18 @@
 @url = http://localhost:3615
 
 ### BASE
-{{url}}
+GET {{url}}
 
 ### ALL EMPLOYEES
-{{url}}/employees
+GET {{url}}/employees
+
+### ADD EMPLOYEE
+POST {{url}}/employee
+content-type: application/json
+
+{
+	"lastName": "Addington",
+	"firstName": "Author",
+	"title": "Sales Representative",
+	"notes": "Author is a test employee that we are adding."
+}

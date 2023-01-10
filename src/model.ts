@@ -1,4 +1,5 @@
 import { MongoClient } from 'mongodb';
+import { IEmployee } from './interfaces.js';
 
 const conn = 'mongodb://localhost:27017';
 const client = new MongoClient(conn);
@@ -19,6 +20,7 @@ export const getEmployees = () => {
 					.project({ firstName: 1, lastName: 1, title: 1, notes: 1 })
 					.toArray();
 				if (employees.length === 0) {
+					// interpet no records as error
 					reject('no data')
 				} else {
 					resolve(employees);
@@ -29,6 +31,11 @@ export const getEmployees = () => {
 			reject(e.message)
 		}
 	})
+}
+
+export const addEmployee = (employee: IEmployee) => {
+	console.log('adding', employee);
+	return 'ok';	
 }
 
 export const getApiInstructions = () => {
@@ -53,4 +60,5 @@ export const getApiInstructions = () => {
 </ul>
 	`;
 }
+
 
