@@ -1,5 +1,4 @@
 import { MongoClient } from 'mongodb';
-import { IEmployee } from './interfaces.js';
 
 const conn = 'mongodb://localhost:27017';
 const client = new MongoClient(conn);
@@ -10,15 +9,16 @@ const getData = async (done: (db: any) => void) => {
 	done(db);
 };
 
-export const getEmployees = (): IEmployee[] => {
-	const employees: IEmployee[] = [
-		{
-			firstName: "fff"
-		}
-	];
-	return employees;
+export const getEmployees = () => {
+	getData(async (db) => {
+		const employees = await db
+			.collection('employees')
+			.find({})
+			.project({ firstName: 1, lastName: 1 })
+			.toArray();
+		console.log(employees);
+	})
 }
-
 
 export const getApiInstructions = () => {
 	return `
