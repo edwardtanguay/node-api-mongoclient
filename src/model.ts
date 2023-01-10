@@ -1,17 +1,24 @@
-import fs from 'fs';
-import { IBook, IRawBook } from './interfaces.js';
+import { MongoClient } from 'mongodb';
+import { IEmployee } from './interfaces.js';
 
-const rawBooks: IRawBook[] = JSON.parse(fs.readFileSync('./src/data/rawBooks.json', 'utf8'));
+const conn = 'mongodb://localhost:27017';
+const client = new MongoClient(conn);
 
-const books: IBook[] = rawBooks.map(rawBook => {
-	return {
-		id: rawBook.id,
-		idCode: rawBook.idCode,
-		title: rawBook.title,
-		description: rawBook.description,
-		language: rawBook.language === '' ? 'english' : rawBook.language
-	}
-});
+const getData = async (done: (db: any) => void) => {
+	await client.connect();
+	const db = client.db('northwind');
+	done(db);
+};
+
+export const getEmployees = (): IEmployee[] => {
+	const employees: IEmployee[] = [
+		{
+			firstName: "fff"
+		}
+	];
+	return employees;
+}
+
 
 export const getApiInstructions = () => {
 	return `
@@ -25,19 +32,14 @@ export const getApiInstructions = () => {
 	code {
 		background-color: #333;
 	}
+	a {
+		color: orange;
+	}
 </style>
 <h1>Book Site API</h1>
 <ul>
-	<li><code>/books</code> - all books</li>
-	<li><code>/books/3</code> - book with id 3</li>
+<li><a href="employees">/employees</a> - get all employees</li>
 </ul>
 	`;
 }
 
-export const getBooks = (): IBook[] => {
-	return books;
-}
-
-export const getBook = (id: number): IBook => {
-	return books.find(m => m.id === id);
-}
