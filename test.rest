@@ -12,15 +12,21 @@ content-type: application/json
 
 {
 	"lastName": "Addington",
-	"firstName": "Author",
+	"firstName": "Arthor",
 	"title": "Sales Representative",
 	"notes": "Author is a test employee that we are adding."
 }
 
 ### DELETE EMPLOYEE
-DELETE {{url}}/employee
+DELETE {{url}}/employee/63be1174bbc54eede15136c7
+
+### EDIT EMPLOYEE
+PUT {{url}}/employee/63be1174bbc54eede15136c7
 content-type: application/json
 
 {
-	"_id": "63be00a44f203f51bfe1d95c"
+	"lastName": "CHANGED-LAST-NAME",
+	"firstName": "CHANGED-FIRST-NAME",
+	"title": "Sales Representative",
+	"notes": "Author is a test employee that we are adding."
 }

@@ -55,7 +55,6 @@ export const deleteEmployee = async (_id: string) => {
 	return new Promise((resolve, reject) => {
 		try {
 			accessDatabase(async (db) => {
-				console.log('trying', _id);
 				const employeesCollection = db.collection("employees");
 				const result = await employeesCollection.deleteOne({ _id: new ObjectID(_id) });
 				if (result.deletedCount === 1) {
@@ -67,6 +66,31 @@ export const deleteEmployee = async (_id: string) => {
 					reject({
 						status: "error",
 						message: `item with id "${_id}" was not deleted`
+					})
+				}
+			});
+		}
+		catch (e) {
+			reject(e);
+		}
+	})
+}
+
+export const editEmployee = async (_id: string, employee: IEmployee) => {
+	return new Promise((resolve, reject) => {
+		try {
+			accessDatabase(async (db) => {
+				const employeesCollection = db.collection("employees");
+				const result = await employeesCollection.updateOne({ _id: new ObjectID(_id) }, { $set: {...employee} });
+				if (result.modifiedCount === 1) {
+					resolve({
+						status: "success",
+						message: `item with id "${_id}" was edited`
+					})
+				} else {
+					reject({
+						status: "error",
+						message: `item with id "${_id}" was not edited`
 					})
 				}
 			});
