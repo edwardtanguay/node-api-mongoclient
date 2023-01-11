@@ -1,10 +1,10 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectID } from 'mongodb';
 import { IEmployee } from './interfaces.js';
 
 const conn = 'mongodb://localhost:27017';
 const client = new MongoClient(conn);
 
-const getData = async (done: (db: any) => void) => {
+const accessDatabase = async (done: (db: any) => void) => {
 	await client.connect();
 	const db = client.db('northwind');
 	done(db);
@@ -13,7 +13,7 @@ const getData = async (done: (db: any) => void) => {
 export const getEmployees = () => {
 	return new Promise((resolve, reject) => {
 		try {
-			getData(async (db) => {
+			accessDatabase(async (db) => {
 				const employees = await db
 					.collection('employees')
 					.find({})
@@ -28,14 +28,53 @@ export const getEmployees = () => {
 			});
 		}
 		catch (e) {
-			reject(e.message)
+			reject(e)
 		}
 	})
 }
 
-export const addEmployee = (employee: IEmployee) => {
-	console.log('adding', employee);
-	return 'ok';	
+export const addEmployee = async (employee: IEmployee) => {
+	return new Promise((resolve, reject) => {
+		try {
+			accessDatabase(async (db) => {
+				const employeesCollection = db.collection("employees");
+				const result = await employeesCollection.insertOne(employee);
+				resolve({
+					status: "success",
+					newId: result.insertedId
+				})
+			});
+		}
+		catch (e) {
+			reject(e);
+		}
+	})
+}
+
+export const deleteEmployee = async (_id: string) => {
+	return new Promise((resolve, reject) => {
+		try {
+			accessDatabase(async (db) => {
+				console.log('trying', _id);
+				const employeesCollection = db.collection("employees");
+				const result = await employeesCollection.deleteOne({ _id: new ObjectID(_id) });
+				if (result.deletedCount === 1) {
+					resolve({
+						status: "success",
+						message: `item with id "${_id}" was deleted`
+					})
+				} else {
+					reject({
+						status: "error",
+						message: `item with id "${_id}" was not deleted`
+					})
+				}
+			});
+		}
+		catch (e) {
+			reject(e);
+		}
+	})
 }
 
 export const getApiInstructions = () => {

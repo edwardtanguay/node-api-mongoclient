@@ -16,3 +16,11 @@ content-type: application/json
 	"title": "Sales Representative",
 	"notes": "Author is a test employee that we are adding."
 }
+
+### DELETE EMPLOYEE
+DELETE {{url}}/employee
+content-type: application/json
+
+{
+	"_id": "63be00a44f203f51bfe1d95c"
+}

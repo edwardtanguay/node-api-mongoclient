@@ -15,17 +15,33 @@ app.get('/', (req: express.Request, res: express.Response) => {
 app.get('/employees', async (req: express.Request, res: express.Response) => {
 	try {
 		const employees = await model.getEmployees();
-		res.json(employees);
+		res.status(200).json(employees);
 	}
 	catch (e) {
 		res.status(500).send(e.message);
 	}
 });
 
-app.post('/employee', (req: express.Request, res: express.Response) => {
-	const employee: IEmployee = req.body;
-	const result = model.addEmployee(employee);
-	res.send(result);
+app.post('/employee', async (req: express.Request, res: express.Response) => {
+	try {
+		const employee: IEmployee = req.body;
+		const result = await model.addEmployee(employee);
+		res.status(200).send(result);
+	}
+	catch (e) {
+		res.status(500).send(e.message);
+	}
+})
+
+app.delete('/employee', async (req: express.Request, res: express.Response) => {
+	try {
+		const { _id } = req.body;
+		const result = await model.deleteEmployee(_id);
+		res.status(200).send(result);
+	}
+	catch (e) {
+		res.status(500).send(e);
+	}
 })
 
 app.listen(config.port, () => {
