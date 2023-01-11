@@ -33,10 +33,11 @@ app.post('/employee', async (req: express.Request, res: express.Response) => {
 	}
 })
 
-app.delete('/employee/:id', async (req: express.Request, res: express.Response) => {
+app.put('/employee/:id', async (req: express.Request, res: express.Response) => {
 	try {
 		const _id = req.params.id;
-		const result = await model.deleteEmployee(_id);
+		const employee: IEmployee = req.body;
+		const result = await model.editEmployee(_id, employee);
 		res.status(200).send(result);
 	}
 	catch (e) {
@@ -44,11 +45,10 @@ app.delete('/employee/:id', async (req: express.Request, res: express.Response) 
 	}
 })
 
-app.put('/employee/:id', async (req: express.Request, res: express.Response) => {
+app.delete('/employee/:id', async (req: express.Request, res: express.Response) => {
 	try {
 		const _id = req.params.id;
-		const employee: IEmployee = req.body;
-		const result = await model.editEmployee(_id, employee);
+		const result = await model.deleteEmployee(_id);
 		res.status(200).send(result);
 	}
 	catch (e) {

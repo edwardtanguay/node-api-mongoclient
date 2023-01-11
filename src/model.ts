@@ -51,31 +51,6 @@ export const addEmployee = async (employee: IEmployee) => {
 	})
 }
 
-export const deleteEmployee = async (_id: string) => {
-	return new Promise((resolve, reject) => {
-		try {
-			accessDatabase(async (db) => {
-				const employeesCollection = db.collection("employees");
-				const result = await employeesCollection.deleteOne({ _id: new ObjectID(_id) });
-				if (result.deletedCount === 1) {
-					resolve({
-						status: "success",
-						message: `item with id "${_id}" was deleted`
-					})
-				} else {
-					reject({
-						status: "error",
-						message: `item with id "${_id}" was not deleted`
-					})
-				}
-			});
-		}
-		catch (e) {
-			reject(e);
-		}
-	})
-}
-
 export const editEmployee = async (_id: string, employee: IEmployee) => {
 	return new Promise((resolve, reject) => {
 		try {
@@ -101,6 +76,31 @@ export const editEmployee = async (_id: string, employee: IEmployee) => {
 	})
 }
 
+export const deleteEmployee = async (_id: string) => {
+	return new Promise((resolve, reject) => {
+		try {
+			accessDatabase(async (db) => {
+				const employeesCollection = db.collection("employees");
+				const result = await employeesCollection.deleteOne({ _id: new ObjectID(_id) });
+				if (result.deletedCount === 1) {
+					resolve({
+						status: "success",
+						message: `item with id "${_id}" was deleted`
+					})
+				} else {
+					reject({
+						status: "error",
+						message: `item with id "${_id}" was not deleted`
+					})
+				}
+			});
+		}
+		catch (e) {
+			reject(e);
+		}
+	})
+}
+
 export const getApiInstructions = () => {
 	return `
 <style>
@@ -114,12 +114,18 @@ export const getApiInstructions = () => {
 		background-color: #333;
 	}
 	a {
+		color: yellow;
+	}
+	span.route {
 		color: orange;
 	}
 </style>
-<h1>Book Site API</h1>
+<h1>Employee Site API</h1>
 <ul>
-<li>GET <a href="employees">/employees</a> - get all employees</li>
+	<li>GET <a href="employees">/employees</a> - get all employees</li>
+	<li>POST <span class="route">/employee</span> - add an employee</li>
+	<li>PUT <span class="route">/employee/63be1174bbc54eede15136c7</span> - edit employee with id 63be1174bbc54eede15136c7</li>
+	<li>DELETE <span class="route">/employee/63be1174bbc54eede15136c7</span> - delete employee with id 63be1174bbc54eede15136c7</li>
 </ul>
 	`;
 }
